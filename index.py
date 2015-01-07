@@ -33,6 +33,8 @@ class MainHandler(BaseHandler):
 
 class LoginHandler(BaseHandler):
     def get(self):
+        if self.current_user != None:
+            self.redirect('/')
         self.render('login.html')
 
     def post(self):
