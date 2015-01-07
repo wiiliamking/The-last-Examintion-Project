@@ -37,7 +37,7 @@ class LoginHandler(BaseHandler):
                 self.set_secure_cookie("username", name)
                 self.redirect('/')
             else:
-                self.render('error.html', 'False password!')
+                self.render('error.html', 'Wrong password!')
 
 class RegistHandler(BaseHandler):
     def get(self):
@@ -68,6 +68,8 @@ class EditHandler(BaseHandler):
         data = self.get_argument("data")
         user = users.find_one({"name": self.current_user})
         user.schedule[column][row] = data
+        _id = user._id
+        users.update({"_id":_id}, user)
 
 if __name__ == "__main__":
     tornado.options.parse_command_line()
