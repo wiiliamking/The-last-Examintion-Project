@@ -20,7 +20,11 @@ class BaseHandler(tornado.web.RequestHandler):
 class MainHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
-        self.render('index.html')
+        name = self.current_user
+        schedule = users.find_one({"name":name})["schedule"]
+        print schedule
+        print "hehe"
+        self.render('index.html', schedule=schedule)
 
 class LoginHandler(BaseHandler):
     def get(self):
@@ -30,15 +34,14 @@ class LoginHandler(BaseHandler):
         name = self.get_argument("name")
         password = self.get_argument("password")
         find = users.find_one({"name":name})
-        print find
-        if (find == {}):
-            self.render('error.html', 'The user doesn\'t exist!')
+        if (users.find({"name":name}).count() == 0):
+            self.render('error.html', error='The user doesn\'t exist!')
         else:
             if (find["password"] == password):
                 self.set_secure_cookie("username", name)
                 self.redirect('/')
             else:
-                self.render('error.html', 'Wrong password!')
+                self.render('error.html', error='Wrong password!')
 
 class RegistHandler(BaseHandler):
     def get(self):
@@ -48,17 +51,20 @@ class RegistHandler(BaseHandler):
         name = self.get_argument("name")
         password = self.get_argument("password")
         schedule = []
-        for i in (1, 130):
+        for i in range(1, 130):
            schedule.append(' ')
         new_user = {
             "name":name,
             "password": password,
             "schedule": schedule
         }
-        users.insert(new_user)
-        self.set_secure_cookie("username", name)
-        print 'Regist success!'
-        self.redirect('/')
+        if (users.find({"name":name}).count() != 0):
+            self.render('error.html', error='The username is repeated!')
+        else:
+            users.insert(new_user)
+            self.set_secure_cookie("username", name)
+            print 'Regist success!'
+            self.redirect('/')
 
 class EditHandler(BaseHandler):
     @tornado.web.authenticated
@@ -69,15 +75,16 @@ class EditHandler(BaseHandler):
     def post(self):
         column = int(self.get_argument("column"))
         row = int(self.get_argument("row"))
-        print column
-        print ' '
-        print row
         data = self.get_argument("data")
         user = users.find_one({"name": self.current_user})
-        print user["schedule"]
         user["schedule"][(row - 1) * 7 + column - 1] = data
         _id = user["_id"]
         users.update({"_id":_id}, user)
+
+class LogoutHandler(BaseHandler):
+    def get(self):
+        self.clear_cookie("username")
+        self.redirect("/login")
 
 if __name__ == "__main__":
     tornado.options.parse_command_line()
@@ -90,7 +97,8 @@ if __name__ == "__main__":
     }
 
     application = tornado.web.Application(
-        handlers = [(r'/', MainHandler), (r'/login', LoginHandler), (r'/regist', RegistHandler), (r'/edit', EditHandler)],
+        handlers = [(r'/', MainHandler), (r'/login', LoginHandler), (r'/regist', RegistHandler), (r'/edit', EditHandler),
+        (r'/logout', LogoutHandler)],
         static_path = os.path.join(os.path.dirname(__file__), "static"),
         debug = True,
         **settings

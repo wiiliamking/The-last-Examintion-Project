@@ -15,7 +15,7 @@
 <!--                 <div class="reg">
                     <a href="#">注册</a>
                 </div> -->
-                <div class="log">
+                <div class="logout">
                     <a href="/logout">登出</a>
                 </div>
             </div>
@@ -34,184 +34,154 @@
                 </tr>
                 <tr>
                     <th class="classes">第一节</th>
-<!--                     <th></th>
+                    <th ></th>
                     <th></th>
                     <th></th>
                     <th></th>
                     <th></th>
-                    <th></th> -->
-                    {% for i in range(0, 7) %}
-                        <th>{{ schedule[i] }}</th>
-                    {% end %}
+                    <th></th>
+                    <th></th>
                 </tr>
                 <tr>
                     <th class="classes">第二节</th>
-<!--                     <th></th>
                     <th></th>
                     <th></th>
                     <th></th>
                     <th></th>
-                    <th></th> -->
-                    {% for i in range(0, 7) %}
-                        <th>{{ schedule[7 + i] }}</th>
-                    {% end %}
+                    <th></th>
+                    <th></th>
+                    <th></th>
                 </tr>
                 <tr>
                     <th class="classes">第三节</th>
-<!--                     <th></th>
+                    <th></th>
                     <th>概率与统计<br> 
                         C205</th>
                     <th></th>
                     <th></th>
                     <th></th>
-                    <th></th> -->
-                    {% for i in range(0, 7) %}
-                        <th>{{ schedule[14 + i] }}</th>
-                    {% end %}
+                    <th></th>
+                    <th></th>
                 </tr>
                 <tr>
                     <th class="classes">第四节</th>
-<!--                     <th></th>
                     <th></th>
                     <th></th>
                     <th></th>
                     <th></th>
-                    <th></th> -->
-                    {% for i in range(0, 7) %}
-                        <th>{{ schedule[21 + i] }}</th>
-                    {% end %}
+                    <th></th>
+                    <th></th>
+                    <th></th>
                 </tr>
                 <tr>
                     <th class="classes">第五节</th>
-<!--                     <th></th>
                     <th></th>
                     <th></th>
                     <th></th>
                     <th></th>
-                    <th></th> -->
-                    {% for i in range(0, 7) %}
-                        <th>{{ schedule[28 + i] }}</th>
-                    {% end %}
+                    <th></th>
+                    <th></th>
+                    <th></th>
                 </tr>
                 <tr>
                     <th class="classes">第六节</th>
-<!--                     <th></th>
                     <th></th>
                     <th></th>
                     <th></th>
                     <th></th>
-                    <th></th> -->
-                    {% for i in range(0, 7) %}
-                        <th>{{ schedule[35 + i] }}</th>
-                    {% end %}
+                    <th></th>
+                    <th></th>
+                    <th></th>
                 </tr>
                 <tr>
                     <th class="classes">第七节</th>
-<!--                     <th></th>
                     <th></th>
                     <th></th>
                     <th></th>
                     <th></th>
-                    <th></th> -->
-                    {% for i in range(0, 7) %}
-                        <th>{{ schedule[42 + i] }}</th>
-                    {% end %}
+                    <th></th>
+                    <th></th>
+                    <th></th>
                 </tr>
                 <tr>
                     <th class="classes">第八节</th>
-<!--                     <th></th>
                     <th></th>
                     <th></th>
                     <th></th>
                     <th></th>
-                    <th></th> -->
-                    {% for i in range(0, 7) %}
-                        <th>{{ schedule[49 + i] }}</th>
-                    {% end %}
+                    <th></th>
+                    <th></th>
+                    <th></th>
                 </tr>
                 <tr>
                     <th class="classes">第九节</th>
-<!--                     <th></th>
                     <th></th>
                     <th></th>
                     <th></th>
                     <th></th>
-                    <th></th> -->
-                    {% for i in range(0, 7) %}
-                        <th>{{ schedule[56 + i] }}</th>
-                    {% end %}
+                    <th></th>
+                    <th></th>
+                    <th></th>
                 </tr>
                 <tr>
                     <th class="classes">第十节</th>
-<!--                     <th></th>
+                    <th></th>
                     <th></th>
                     <th></th>
                     <th>web2.0 B403</th>
                     <th></th>
-                    <th></th> -->
-                    {% for i in range(0, 7) %}
-                        <th>{{ schedule[63 + i] }}</th>
-                    {% end %}
+                    <th></th>
+                    <th></th>
                 </tr>
                 <tr>
                     <th class="classes">第十一节</th>
-<!--                     <th></th>
                     <th></th>
                     <th></th>
                     <th></th>
                     <th></th>
-                    <th></th> -->
-                    {% for i in range(0, 7) %}
-                        <th>{{ schedule[70 + i] }}</th>
-                    {% end %}
+                    <th></th>
+                    <th></th>
+                    <th></th>
                 </tr>
                 <tr>
                     <th class="classes">第十二节</th>
-<!--                     <th></th>
                     <th></th>
                     <th></th>
                     <th></th>
                     <th></th>
-                    <th></th> -->
-                    {% for i in range(0, 7) %}
-                        <th>{{ schedule[77 + i] }}</th>
-                    {% end %}
+                    <th></th>
+                    <th></th>
+                    <th></th>
                 </tr>
                 <tr>
                     <th class="classes">第十三节</th>
-<!--                     <th></th>
                     <th></th>
                     <th></th>
                     <th></th>
                     <th></th>
-                    <th>数字电路与模拟设计实验 B104</th> -->
-                    {% for i in range(0, 7) %}
-                        <th>{{ schedule[84 + i] }}</th>
-                    {% end %}
+                    <th></th>
+                    <th>数字电路与模拟设计实验 B104</th>
+                    <th></th>
                 </tr>
                 <tr>
                     <th class="classes">第十四节</th>
-<!--                     <th></th>
                     <th></th>
                     <th></th>
                     <th></th>
                     <th></th>
-                    <th></th> -->
-                    {% for i in range(0, 7) %}
-                        <th>{{ schedule[91 + i] }}</th>
-                    {% end %}
+                    <th></th>
+                    <th></th>
+                    <th></th>
                 </tr>
                 <tr>
                     <th class="classes">第十五节</th>
-<!--                     <th></th>
                     <th></th>
                     <th></th>
                     <th></th>
                     <th></th>
-                    <th></th> -->
-                    {% for i in range(0, 7) %}
-                        <th>{{ schedule[98 + i] }}</th>
-                    {% end %}
+                    <th></th>
+                    <th></th>
+                    <th></th>
                 </tr>
             </table>
         </div>
