@@ -21,10 +21,15 @@ class MainHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
         name = self.current_user
-        schedule = users.find_one({"name":name})["schedule"]
-        print schedule
-        print "hehe"
-        self.render('index.html', schedule=schedule)
+        count = users.find({"name":name}).count()
+        if (count == 0):
+            self.clear_cookie("username")
+            self.redirect("/login")
+        else:
+            schedule = users.find_one({"name":name})["schedule"]
+            print schedule
+            print "hehe"
+            self.render('index.html', schedule=schedule)
 
 class LoginHandler(BaseHandler):
     def get(self):
