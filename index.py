@@ -14,13 +14,13 @@ db = con.test
 users = db.user
 
 class BaseHandler(tornado.web.RequestHandler):
-    def get_cursrent_user(self):
+    def get_current_user(self):
        return self.get_secure_cookie("username")
 
 class MainHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
-        render('index.html')
+        self.render('index.html')
 
 class LoginHandler(BaseHandler):
     def get(self):
@@ -30,7 +30,8 @@ class LoginHandler(BaseHandler):
         name = self.get_argument("name")
         password = self.get_argument("password")
         find = users.find_one({"name":name})
-        if (find == null):
+        print find
+        if (find == {}):
             self.render('error.html', 'The user doesn\'t exist!')
         else:
             if (find["password"] == password):
@@ -41,12 +42,14 @@ class LoginHandler(BaseHandler):
 
 class RegistHandler(BaseHandler):
     def get(self):
-        render('regist.html')
+        self.render('reg.html')
 
     def post(self):
         name = self.get_argument("name")
         password = self.get_argument("password")
-        schedule = [[] * 15] * 7
+        schedule = []
+        for i in (1, 130):
+           schedule.append(' ')
         new_user = {
             "name":name,
             "password": password,
@@ -54,6 +57,7 @@ class RegistHandler(BaseHandler):
         }
         users.insert(new_user)
         self.set_secure_cookie("username", name)
+        print 'Regist success!'
         self.redirect('/')
 
 class EditHandler(BaseHandler):
@@ -63,12 +67,16 @@ class EditHandler(BaseHandler):
         render('editor.html', schedule=user.schedule)
 
     def post(self):
-        column = self.get_argument("column")
-        row = self.get_argument("row")
+        column = int(self.get_argument("column"))
+        row = int(self.get_argument("row"))
+        print column
+        print ' '
+        print row
         data = self.get_argument("data")
         user = users.find_one({"name": self.current_user})
-        user.schedule[column][row] = data
-        _id = user._id
+        print user["schedule"]
+        user["schedule"][(row - 1) * 7 + column - 1] = data
+        _id = user["_id"]
         users.update({"_id":_id}, user)
 
 if __name__ == "__main__":
