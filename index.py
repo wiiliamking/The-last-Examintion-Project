@@ -4,6 +4,7 @@ import tornado.web
 import tornado.options
 import os.path
 import pymongo
+import time
 
 from tornado.options import define, options
 define("port", default=8000, help="run on the given port", type=int)
@@ -27,8 +28,6 @@ class MainHandler(BaseHandler):
             self.redirect("/login")
         else:
             schedule = users.find_one({"name":name})["schedule"]
-            print schedule
-            print "hehe"
             self.render('index.html', schedule=schedule)
 
 class LoginHandler(BaseHandler):
@@ -59,11 +58,12 @@ class RegistHandler(BaseHandler):
         password = self.get_argument("password")
         schedule = []
         for i in range(1, 130):
-           schedule.append(' ')
+           schedule.append('')
         new_user = {
             "name":name,
             "password": password,
-            "schedule": schedule
+            "schedule": schedule,
+            "freetime": 105
         }
         if (users.find({"name":name}).count() != 0):
             self.render('error.html', error='The username is repeated!')
@@ -93,6 +93,47 @@ class LogoutHandler(BaseHandler):
         self.clear_cookie("username")
         self.redirect("/login")
 
+class ArrangeHandler(BaseHandler):
+    @tornado.web.authenticated
+    def get(self):
+        user = users.find_one({"name":self.current_user})
+        if user["freetime"] <= 0:
+           self.write("You have no free time!")
+
+    def post(self):
+        user = users.find_one({"name":self.current_user})
+        things = self.get_argument("event")
+        cost_time = 0
+        for thing in things:
+            cost_time += thing.time
+        if user["freetime"] - cost_time < 0:
+           self.write("You have not enough free time!")
+        else:
+            schedule = user["schedule"]
+            sorted(things, key= lambda thing : thing[0] - time.time())
+            i = 0
+            for thing in things:
+                jud = 1
+                while jud == 1:
+                    for j in range(0, 15):
+                        if schedule[j][i] == '':
+                            schedule[j][i] = thing
+                            break
+                    if j == 15:
+                        i = (i + 1) % 7
+                    else:
+                        jud = 0
+        self.render('confirm.html', schedule=schedule)
+
+class ConfirmHandler(BaseHandler):
+    @tornado.web.authenticated
+    def post(self):
+        schedule = self.get_argument("schedule")
+        user = user.find_one({"name": self.current_user})
+        user["schedule"] = schedule
+        users.update({"name": self.current_user}, user)
+        self.redirect('/')
+
 if __name__ == "__main__":
     tornado.options.parse_command_line()
 
@@ -105,7 +146,7 @@ if __name__ == "__main__":
 
     application = tornado.web.Application(
         handlers = [(r'/', MainHandler), (r'/login', LoginHandler), (r'/regist', RegistHandler), (r'/edit', EditHandler),
-        (r'/logout', LogoutHandler)],
+        (r'/logout', LogoutHandler), (r'/arrange', ArrangeHandler)],
         static_path = os.path.join(os.path.dirname(__file__), "static"),
         debug = True,
         **settings
