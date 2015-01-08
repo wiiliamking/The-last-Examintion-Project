@@ -27,8 +27,10 @@ class MainHandler(BaseHandler):
             self.clear_cookie("username")
             self.redirect("/login")
         else:
+            now_time = time.localtime()
             schedule = users.find_one({"name":name})["schedule"]
-            self.render('index.html', schedule=schedule)
+            self.render('index.html', schedule=schedule, year=now_time[0], month=now_time[1],
+            day=now_time[2])
 
 class LoginHandler(BaseHandler):
     def get(self):
