@@ -6,30 +6,45 @@ Time scheduler
 
 class user{
     name
-    password // 不解释。。。
-    schedule[]  // 日程表数组，一周一个元素，每一周为一个schedule类，作为历史记录
-    proto //schedule类，为目前使用的日程安排
-    slogan //口号
+    password 
+    // 不解释。。。
+    schedule[]  
+    // 日程表数组，一周一个元素，每一周为一个schedule类，作为历史记录
+    proto 
+    //schedule类，为目前使用的日程安排
+    slogan 
+    //口号
 }
 
 class schedule {
-    content[] // 日程内容，以课程表形式一格一格划分，每格有固定时间段（方便处理。。。。），用一维模拟二维，每一个为一个event类
-    specification // 日程说明
-    setUpTime // 建立时间，proto则为修改时间
+    content[] 
+    // 日程内容，以课程表形式一格一格划分，每格有固定时间段（方便处理。。。。），用一维模拟二维，每一个为一个event类
+    specification 
+    // 日程说明
+    setUpTime 
+    // 建立时间，proto则为修改时间
 }
 
 class event {
-    summary //  任务概述
-    specifiction // 详细说明
-    completed // 是否完成,值为1或0
-    feeling //  感想
-    photo // 照片证明
-    comments[] //其它人的评论
+    summary 
+    //  任务概述
+    specifiction 
+    // 详细说明
+    completed 
+    // 是否完成,值为1或0
+    feeling 
+    //  感想
+    photo 
+    // 照片证明
+    comments[] 
+    //其它人的评论
 }
 
 class comment {
-    content //内容
-    name //留言者
+    content
+    //内容
+    name
+    //留言者
 }
 
 页面内容
@@ -69,9 +84,13 @@ confirm.html
 
 前端post请求:
 
-/login //post数据有name、password，使用ajax发送，以便用户名密码错误时弹出错误警示框而不跳转页面，响应数据为错误信息或success信息。
-/editor //post数据为修改格的坐标row, col和修改后的summary和specification，相应信息为success
-/arranger //post数据为事件列表eventList，每个事件对象包含成员summary, specification, deadline(成员year,month,day)，及所需时间time(hour为单位)
-/confirm //post数据为待确认的schedule对象
+/login 
+//post数据有name、password，使用ajax发送，以便用户名密码错误时弹出错误警示框而不跳转页面，响应数据为错误信息或success信息。
+/editor 
+//post数据为修改格的坐标row, col和修改后的summary和specification，相应信息为success
+/arranger 
+//post数据为事件列表eventList，每个事件对象包含成员summary, specification, deadline(成员year,month,day)，及所需时间time(hour为单位)
+/confirm 
+//post数据为待确认的schedule对象
 
 ===========================
