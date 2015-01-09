@@ -5,6 +5,7 @@ import tornado.options
 import os.path
 import pymongo
 import time
+import os
 
 from tornado.options import define, options
 define("port", default=8000, help="run on the given port", type=int)
@@ -168,6 +169,23 @@ class ConfirmHandler(BaseHandler):
         users.update({"name": self.current_user}, user)
         self.redirect('/')
 
+class Submithandler(BaseHandler):
+    @tornado.web.authenticated
+    def post(self):
+        feeling = self.get_argument("feeling")
+        photo = self.request.files['photo'][0]
+        row = self.get_argument('row')
+        col = self.get_argument('col')
+        name = self.current_user
+        path = "./static/photo/" + name
+        user = users.find_one({"name":name})
+        if os.path.exists(path):
+            os.makedir(path)
+        fin = open(path + user["num"] + '_' + row + '_' + col + '.jpg', 'r')
+        fin.write(photo["body"])
+        fin.close()
+        user["schedule"][user["num"]][(col - 1) * 16 + row - 1]["feeling"] = feeling
+        user["schedule"][user["num"]][(col - 1) * 16 + row - 1]["photo"] = path
 if __name__ == "__main__":
     tornado.options.parse_command_line()
     settings = {
@@ -179,7 +197,7 @@ if __name__ == "__main__":
 
     application = tornado.web.Application(
         handlers = [(r'/', MainHandler), (r'/login', LoginHandler), (r'/regist', RegistHandler), (r'/edit', EditHandler),
-        (r'/logout', LogoutHandler), (r'/arrange', ArrangeHandler)],
+        (r'/logout', LogoutHandler), (r'/arrange', ArrangeHandler), (r'/submit', SubmitHandler)],
         static_path = os.path.join(os.path.dirname(__file__), "static"),
         debug = True,
         **settings

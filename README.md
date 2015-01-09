@@ -96,5 +96,5 @@ confirm.html
 /comment
 //post数据有comment评论内容和writer(vistor或用户名)
 /submit
-//为任务完成的打卡，post数据有感想feeling和照片photo
+//为任务完成的打卡，post数据有感想feeling和照片photo及坐标row, col
 =============================
