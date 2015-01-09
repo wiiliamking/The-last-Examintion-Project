@@ -14,6 +14,7 @@ class user{
     //schedule类，为目前使用的日程安排
     slogan 
     //口号
+    num
 }
 
 class schedule {
@@ -50,7 +51,7 @@ class comment {
 页面内容
 
 index.html 
-//主页，显示当天的日程（每一格只显示概述，点击格弹出小框显示详细说明）, 前端接收数据： year, month, day（当天日期）, schedule(当天日程，只有当天的事件，非全部，就是一维的数组)
+//主页，显示当天的日程(每一格只显示概述，点击格弹出小框显示详细说明和任务完成的提交表单(action='/submit')), 前端接收数据： year, month, day（当天日期）, schedule(当天日程，只有当天的事件，非全部，就是一维的数组)
 
 login.html
 //登录页面，交互数据：name, password，使用AJAX提交用户名密码，以使用户名密码错误时页面不跳转而只是弹出错误警示框。
@@ -92,5 +93,8 @@ confirm.html
 //post数据为事件列表eventList，每个事件对象包含成员summary, specification, deadline(成员year,month,day)，及所需时间time(hour为单位)
 /confirm 
 //post数据为待确认的schedule对象
-
+/comment
+//post数据有comment评论内容和writer(vistor或用户名)
+/submit
+//为任务完成的打卡，post数据有感想feeling和照片photo
 =============================

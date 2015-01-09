@@ -28,9 +28,19 @@ class MainHandler(BaseHandler):
             self.redirect("/login")
         else:
             now_time = time.localtime()
-            schedule = users.find_one({"name":name})["schedule"]
-            self.render('index.html', schedule=schedule, year=now_time[0], month=now_time[1],
-            day=now_time[2])
+            user = users.find_one({"name":name})
+            schedule = user["schedule"]
+            num = user["num"]
+            if (num == -1):
+                self.redirect('/editor')
+            else:
+                calTime = now_time - schedule["setUpTime"]
+                if cal - 604800 > 0:
+                    new_schedule = user["proto"]
+                    new_schedule["setUpTime"] = now_time
+                    user["schedule"].append(new_schedule)
+                    ++user["num"]
+                self.render('index.html', schedule=schedule[num], year=now_time[0], month=now_time[1], day=now_time[2])
 
 class LoginHandler(BaseHandler):
     def get(self):
@@ -46,7 +56,7 @@ class LoginHandler(BaseHandler):
             self.render('error.html', error='The user doesn\'t exist!')
         else:
             if (find["password"] == password):
-                self.set_secure_cookie("username", name)
+                self.set_secure_cookie("username", name) 
                 self.redirect('/')
             else:
                 self.render('error.html', error='Wrong password!')
@@ -59,13 +69,21 @@ class RegistHandler(BaseHandler):
         name = self.get_argument("name")
         password = self.get_argument("password")
         schedule = []
+        proto = {
+            content: []
+            specification: "Empty schedule"
+            setUpTime: time.time()
+        }
         for i in range(1, 130):
-           schedule.append('')
+           proto["content"].append('')
         new_user = {
             "name":name,
             "password": password,
             "schedule": schedule,
             "freetime": 105
+            "photo": proto
+            slogan = self.get_argument("slogan")
+            "num": -1
         }
         if (users.find({"name":name}).count() != 0):
             self.render('error.html', error='The username is repeated!')
@@ -73,20 +91,34 @@ class RegistHandler(BaseHandler):
             users.insert(new_user)
             self.set_secure_cookie("username", name)
             print 'Regist success!'
-            self.redirect('/')
+            self.redirect('/edit')
 
 class EditHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
         user = users.find_one({"name":self.current_user})
-        render('editor.html', schedule=user.schedule)
+        num = user["num"]
+        render('editor.html', schedule=user["proto"])
 
     def post(self):
         column = int(self.get_argument("column"))
         row = int(self.get_argument("row"))
-        data = self.get_argument("data")
+        summary = self.get_argument("summary")
+        specification = self.get_argument('specification')
+        time = self.get_argument("time")
         user = users.find_one({"name": self.current_user})
-        user["schedule"][(row - 1) * 7 + column - 1] = data
+        new_event = {
+            "summary":summary,
+            "specification":specification,
+            "complete":0,
+            "feeling":"none"
+            comments = []
+        }
+        for i in range (0, time)
+            user["proto"][(row - 1) * 7 + column - 1 + i] = new_event
+        if (user["num"] == -1):
+            user["num"] == 0
+            user["schedule"].append(user["proto"])
         _id = user["_id"]
         users.update({"_id":_id}, user)
 
@@ -132,13 +164,12 @@ class ConfirmHandler(BaseHandler):
     def post(self):
         schedule = self.get_argument("schedule")
         user = user.find_one({"name": self.current_user})
-        user["schedule"] = schedule
+        user["schedule"][user["num"]] = schedule
         users.update({"name": self.current_user}, user)
         self.redirect('/')
 
 if __name__ == "__main__":
     tornado.options.parse_command_line()
-
     settings = {
         "template_path": os.path.join(os.path.dirname(__file__), "templates"),
         "cookie_secret": "bZJc2sWbQLKos6GkHn/VB9oXwQt8S0R0kRvJ5/xJ89E=",
