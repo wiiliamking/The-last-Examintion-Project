@@ -65,8 +65,8 @@ class MainHandler(BaseHandler):
                 if user["schedule"][user["num"] - 1]["day"] != time.localtime()[2]:
                     for i in range(0, 8):
                         if user["schedule"][user[num] - 1][i]["completed"] == u"努力中。。。。。。":
-                            user["schedule"][user[num] - 1][i]["completed"] = u"否"
-                            user["schedule"][user[num] - 1][i]["onTime"] = u"否"
+                            user["schedule"][user[num] - 1][i]["completed"] = u""
+                            user["schedule"][user[num] - 1][i]["completed"] = u""
                     create = 1
                     proto = {
                         "content": [],

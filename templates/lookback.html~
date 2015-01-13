@@ -85,7 +85,7 @@
 
     <div id="more" class="hidden">
         {% if len(schedule) == 1 %}
-            <p>还没有历史的记录喔～</p>
+            <p></p>
         {% end %}
         {% for i in range(0, len(schedule) - 1)[::-1] %}
         <div class = "table">

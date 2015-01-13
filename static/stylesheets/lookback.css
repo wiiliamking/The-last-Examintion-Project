@@ -59,7 +59,7 @@ th, td{
     background-color: #FFD7A1;
 }
 .foot {
-    height:40rem;
+    height:10rem;
     margin-top: -3.8%;
     background-color: rgb(179, 179, 179);
 }
@@ -117,4 +117,16 @@ a {
 
 .now {
     background-color: rgb(200,200,200);
+}
+
+.hidden {
+    display: none;
+}
+
+.event_detail {
+    position: absolute;
+    z-index: 3;
+    top: 40%;
+    left:45%;
+    background-color: white;
 }

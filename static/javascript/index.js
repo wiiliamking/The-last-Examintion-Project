@@ -26,7 +26,7 @@ document.onclick = function() {
         var clas = event.srcElement.className;
         if (clas == "classes") col = 0;
         if (clas == "time") col = 1;
-        if (clas == "day") col = 3;
+        if (clas == "day") col = 2;
         changeTotext(event.srcElement);
   }   
 } 
