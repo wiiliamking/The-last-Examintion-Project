@@ -30,69 +30,118 @@ class MainHandler(BaseHandler):
         else:
             now_time = time.localtime()
             user = users.find_one({"name":name})
-            schedule = user["schedule"]
             num = user["num"]
-            if (num == -1):
-                self.redirect('/editor')
+            create = 0
+            if (num == 0):
+                create = 1
+                proto = {
+                    "content": [],
+                    "specification": "Empty schedule",
+                    "slogan": "Write your slogan",
+                    "setUpTime": time.time(),
+                    "restTime": 56,
+                    "list": []
+                }
+                for i in range(0, 8):
+                    new_event = {
+                       "summary":"Empty event",
+                       "completed":0,
+                       "feeling":"",
+                        "content":"",
+                        "onTime":0,
+                       "startTime": i * 2 + 7,
+                       "endTime": i * 2 + 9
+                    }
+                    proto["content"].append(new_event)
+                user["schedule"].append(proto)
+                user["num"] = user["num"] + 1
             else:
-                calTime = now_time - schedule["setUpTime"]
-                if cal - 604800 > 0:
-                    new_schedule = user["proto"]
-                    new_schedule["setUpTime"] = now_time
-                    user["schedule"].append(new_schedule)
-                    ++user["num"]
-                self.render('index.html', schedule=schedule[num], year=now_time[0], month=now_time[1], day=now_time[2])
+                calTime = time.time() - user["schedule"][num - 1]["setUpTime"]
+                if calTime - 86400 > 0:
+                    create = 1
+                    proto = {
+                        "content": [],
+                        "specification": "Empty schedule",
+                        "slogan": "Write your slogan",
+                        "setUpTime": time.time(),
+                        "restTime": 56,
+                        "list": []
+                    }
+                    for i in range(0, 8):
+                        new_event = {
+                           "summary":"Empty event",
+                           "completed":"",
+                           "feeling":"",
+                           "content":"",
+                           "onTime":0,
+                           "startTime": i * 2 + 7,
+                           "endTime": i * 2 + 9
+                        }
+                        proto["content"].append(new_event)
+                    user["schedule"].append(proto)
+                    user["num"] = user["num"] + 1
+            if create == 1:
+                todelete = []
+                for i in range(0, len(user["events"])):
+                        if time.time() - time.mktime(time.strptime(str(now_time[0]) + '-' + user["events"][i]["deadline"] 
+                        + ' 00:00:00', "%Y-%m-%d %H:%M:%S")) >= 0:
+                            todelete.append(i)
+                for i in todelete:
+                   del user["events"][i]
+                for event in user["events"]:
+                    if (event["summary"] in user["schedule"][user["num"] - 1]["list"]):
+                        continue
+                    for i in range(0, 8):
+                        if user["schedule"][user["num"] - 1]["content"][i]["summary"] == "Empty event":
+                            user["schedule"][user["num"] - 1]["content"][i]["summary"] = event["summary"]
+                            user["schedule"][user["num"] - 1]["list"].append(event["summary"])
+                            break
+            users.update({"name":name}, user)
+            self.render('index.html', schedule=user["schedule"][user["num"] - 1]["content"], slogan=user["schedule"][user["num"] - 1]["slogan"])
 
 class LoginHandler(BaseHandler):
     def get(self):
         if self.current_user != None:
             self.redirect('/')
-        self.render('login.html')
+        else:
+            self.render('login.html')
 
     def post(self):
         name = self.get_argument("name")
         password = self.get_argument("password")
         find = users.find_one({"name":name})
+        print find
         if (users.find({"name":name}).count() == 0):
-            self.render('error.html', error='The user doesn\'t exist!')
+            self.write('The user doesn\'t exist!')
         else:
             if (find["password"] == password):
                 self.set_secure_cookie("username", name) 
                 self.redirect('/')
             else:
-                self.render('error.html', error='Wrong password!')
+                self.write('Wrong password!')
 
 class RegistHandler(BaseHandler):
     def get(self):
-        self.render('reg.html')
+        self.render('register.html')
 
     def post(self):
         name = self.get_argument("name")
         password = self.get_argument("password")
         schedule = []
-        proto = {
-            content: []
-            specification: "Empty schedule"
-            setUpTime: time.time()
-        }
-        for i in range(1, 130):
-           proto["content"].append('')
         new_user = {
             "name":name,
             "password": password,
             "schedule": schedule,
-            "freetime": 105
-            "photo": proto
-            slogan = self.get_argument("slogan")
-            "num": -1
+            "num": 0,
+            "events":[]
         }
         if (users.find({"name":name}).count() != 0):
-            self.render('error.html', error='The username is repeated!')
+            self.write('The username is repeated!')
         else:
             users.insert(new_user)
             self.set_secure_cookie("username", name)
             print 'Regist success!'
-            self.redirect('/edit')
+            self.redirect('/')
 
 class EditHandler(BaseHandler):
     @tornado.web.authenticated
@@ -102,63 +151,57 @@ class EditHandler(BaseHandler):
         render('editor.html', schedule=user["proto"])
 
     def post(self):
-        column = int(self.get_argument("column"))
+        col = int(self.get_argument("col"))
         row = int(self.get_argument("row"))
-        summary = self.get_argument("summary")
-        specification = self.get_argument('specification')
-        time = self.get_argument("time")
+        value = self.get_argument("value")
         user = users.find_one({"name": self.current_user})
-        new_event = {
-            "summary":summary,
-            "specification":specification,
-            "complete":0,
-            "feeling":"none"
-            comments = []
-        }
-        for i in range (0, time)
-            user["proto"][(row - 1) * 7 + column - 1 + i] = new_event
-        if (user["num"] == -1):
-            user["num"] == 0
-            user["schedule"].append(user["proto"])
+        if (col == 0):
+            time = value.split('-')
+            user["schedule"][user["num"] - 1]["content"][row - 1]["startTime"] = time[0]
+            user["schedule"][user["num"] - 1]["content"][row - 1]["endTime"] = time[1]
+        else:
+            user["schedule"][user["num"] - 1]["content"][row - 1]["summary"] = value
         _id = user["_id"]
         users.update({"_id":_id}, user)
 
 class LogoutHandler(BaseHandler):
     def get(self):
         self.clear_cookie("username")
-        self.redirect("/login")
+        self.redirect("/")
 
 class ArrangeHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
-        user = users.find_one({"name":self.current_user})
-        if user["freetime"] <= 0:
-           self.write("You have no free time!")
+        self.render("arranger.html")
 
     def post(self):
+        thing = self.get_argument("things_todo")
+        deadline = self.get_argument("deadline")
+        new_event = {
+            "summary":thing,
+            "deadline":deadline
+        }
         user = users.find_one({"name":self.current_user})
-        things = self.get_argument("event")
-        cost_time = 0
-        for thing in things:
-            cost_time += thing.time
-        if user["freetime"] - cost_time < 0:
-           self.write("You have not enough free time!")
-        else:
-            schedule = user["schedule"]
-            sorted(things, key= lambda thing : thing[0] - time.time())
-            i = 0
-            for thing in things:
-                jud = 1
-                while jud == 1:
-                    for j in range(0, 15):
-                        if schedule[j][i] == '':
-                            schedule[j][i] = thing
-                            break
-                    if j == 15:
-                        i = (i + 1) % 7
-                    else:
-                        jud = 0
-        self.render('confirm.html', schedule=schedule)
+        user["events"].append(new_event)
+        now_time = time.localtime()
+        todelete = []
+        for i in range(0, len(user["events"])):
+            event_time = str(now_time[0]) + '-' + user["events"][i]["deadline"] + ' 00:00:00'
+            print event_time
+            if time.time() - time.mktime(time.strptime(event_time, "%Y-%m-%d %H:%M:%S")) >= 0:
+                todelete.append(i)
+        for i in todelete:
+           del user["events"][i]
+        for event in user["events"]:
+            if (event["summary"] in user["schedule"][user["num"] - 1]["list"]):
+                continue
+            for i in range(0, 8):
+                if user["schedule"][user["num"] - 1]["content"][i]["summary"] == "Empty event":
+                    user["schedule"][user["num"] - 1]["content"][i]["summary"] = event["summary"]
+                    user["schedule"][user["num"] - 1]["list"].append(event["summary"])
+                    break
+        users.update({"name":self.current_user}, user)
+        self.redirect('/')
 
 class ConfirmHandler(BaseHandler):
     @tornado.web.authenticated
@@ -167,37 +210,77 @@ class ConfirmHandler(BaseHandler):
         user = user.find_one({"name": self.current_user})
         user["schedule"][user["num"]] = schedule
         users.update({"name": self.current_user}, user)
-        self.redirect('/')
+        self.write('Update success!')
 
-class Submithandler(BaseHandler):
+class SubmitHandler(BaseHandler):
     @tornado.web.authenticated
-    def post(self):
+    def post(self, input):
         feeling = self.get_argument("feeling")
-        photo = self.request.files['photo'][0]
-        row = self.get_argument('row')
-        col = self.get_argument('col')
+        # photo = self.request.files['photo'][0]
+        row = int(input[::-1])
+        onTime = self.get_argument("onTime")
+        content = self.get_argument("content")
         name = self.current_user
         path = "./static/photo/" + name
         user = users.find_one({"name":name})
-        if os.path.exists(path):
-            os.makedir(path)
-        fin = open(path + user["num"] + '_' + row + '_' + col + '.jpg', 'r')
-        fin.write(photo["body"])
-        fin.close()
-        user["schedule"][user["num"]][(col - 1) * 16 + row - 1]["feeling"] = feeling
-        user["schedule"][user["num"]][(col - 1) * 16 + row - 1]["photo"] = path
+        completed = self.get_argument("completed")
+        # if not os.path.exists(path):
+        #     os.makedir(path)
+        # fin = open(path + user["num"] + '_' + row + '_' + col + '.jpg', 'r')
+        # fin.write(photo["body"])
+        # fin.close()
+        num = user["num"] - 1
+        user["schedule"][user["num"] - 1]["content"][row - 1]["completed"] = completed
+        user["schedule"][user["num"] - 1]["content"][row - 1]["feeling"] = feeling
+        user["schedule"][user["num"] - 1]["content"][row - 1]["onTime"] = onTime
+        user["schedule"][user["num"] - 1]["content"][row - 1]["content"] = content
+        # user["schedule"][user["num"]]["content"][(col - 1) * 8 + row - 1]["photo"] = path
+        users.update({"name":name}, user)
+        self.redirect('/')
+
+class shareHandler(BaseHandler):
+    @tornado.web.authenticated
+    def get(self):
+        self.render('lookback.html')
+
+class showHandler(BaseHandler):
+    @tornado.web.authenticated
+    def get(self, input):
+        name = input[::-1]
+        user = users.find_one({"name":name})
+        self.render('sharedetail.html', user=user)
+
+class commentHandler(BaseHandler):
+    def post(self):
+        new_comment = {
+            "name":self.get_argument("writer"),
+            "content":self.get_argument("comment")
+        }
+        user = users.find_one({"name":self.get_argument("name")})
+        num = self.get_argument("num")
+        row = self.get_argument("row")
+        col = self.get_argument("col")
+        user["schedule"]["num"]["content"][(col - 1) * 8 + row - 1]["comments"].append(new_event)
+        users.update({"name":name}, user)
+        self.write('success')
+
+class welcomeHandler(BaseHandler):
+    def get(self):
+        self.render('firstview.html')
+
 if __name__ == "__main__":
     tornado.options.parse_command_line()
     settings = {
         "template_path": os.path.join(os.path.dirname(__file__), "templates"),
         "cookie_secret": "bZJc2sWbQLKos6GkHn/VB9oXwQt8S0R0kRvJ5/xJ89E=",
         "xsrf_cookies": False,
-        "login_url": "/login"
+        "login_url": "/welcome"
     }
 
     application = tornado.web.Application(
-        handlers = [(r'/', MainHandler), (r'/login', LoginHandler), (r'/regist', RegistHandler), (r'/edit', EditHandler),
-        (r'/logout', LogoutHandler), (r'/arrange', ArrangeHandler), (r'/submit', SubmitHandler)],
+        handlers = [(r'/', MainHandler), (r'/login', LoginHandler), (r'/register', RegistHandler), (r'/edit', EditHandler),
+        (r'/logout', LogoutHandler), (r'/arranger', ArrangeHandler), (r'/submit/(\w+)', SubmitHandler),
+        (r'/share', shareHandler), (r'/share/(\w+)', showHandler), (r'/welcome', welcomeHandler)],
         static_path = os.path.join(os.path.dirname(__file__), "static"),
         debug = True,
         **settings

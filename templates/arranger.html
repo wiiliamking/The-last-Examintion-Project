@@ -7,7 +7,7 @@
   <meta name="keywords" content="">
   <meta name="viewport"
         content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <title>login</title>
+  <title>Time scheduler</title>
 
   <!-- Set render engine for 360 browser -->
   <meta name="renderer" content="webkit">
@@ -32,25 +32,41 @@
   <meta name="msapplication-TileColor" content="#0e90d2">
 
   <link rel="stylesheet" href="{{ static_url("assets") }}/css/amazeui.min.css">
-  <link rel="stylesheet" href="{{ static_url("stylesheets") }}/app.css">
+  <link rel="stylesheet" href="{{ static_url("stylesheets") }}/index.css">
 </head>
 <body>
 <!--在这里编写你的代码-->
+
     <div class="main">
-      <div class="head am-monospace" id = "reg_head">
-            <img src = "{{ static_url("assets") }}/i/logo.png" alt = "logo" class = "logo">
-            <h2 class="word">Time scheduler</h2>
+        <div class="head">
+            <h2 class="word am-monospace">Time scheduler</h2>
         </div>
-        <div class="area">
-          <form method="post" action="/login">
-            <input placeholder="  请输入用户名" class="cin first" name = "name"><br>
-            <input placeholder="  请输入密码" class="cin" name ="password" type="password"><br>
-            <input type = "submit" value="登录"class = "cin submit"><br>
-            <a href="/register">注册</a>
+        <div class="nav">
+             <button id="change" type="button" class="am-btn am-btn-default"><a href="/">主页</a></button>
+             <button id="change" type="button" class="am-btn am-btn-default"><a href="/share">回顾</a></button>
+             <button id="change" type="button" class="am-btn am-btn-default now"><a href="/arranger">帮你安排</a></button>
+             <button id="change" type="button" class="am-btn am-btn-default"><a href="logout">退出</a></button>
+        </div>
+        <div class = "table">
+            <table>
+            </table>
+        </div>
+        <div class="am-g">
+          <div class="am-u-md-8 am-u-sm-centered">
+            <form class="am-form" method="post" action='/arranger'>
+              <fieldset class="am-form-set">
+                <input type="text" placeholder="写下你的待做事件" name="things_todo">
+                <input type="text" placeholder="它的deadline （月日，格式：xx-xx）" name = "deadline">
+              </fieldset>
+              <button type="submit arrange_submit" class="am-btn am-btn-primary am-btn-block" id = "change2">提交，scheduler帮帮你</button>
             </form>
+          </div>
         </div>
+
     </div>
-    <div class = "foot"></div>
+    <div class="foot">
+      <p>防止突然闲着没事？输入待做事件，scheduler帮你安排时间~</p>
+    </div> 
 
 <!--[if (gte IE 9)|!(IE)]><!-->
 <script src="{{ static_url("javascript") }}/jquery.min.js"></script>

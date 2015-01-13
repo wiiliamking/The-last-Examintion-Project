@@ -8,7 +8,7 @@ class user{
     name
     password 
     // 不解释。。。
-    schedule[]  
+    schedule[]
     // 日程表数组，一周一个元素，每一周为一个schedule类，作为历史记录
     proto 
     //schedule类，为目前使用的日程安排
@@ -24,6 +24,8 @@ class schedule {
     // 日程说明
     setUpTime 
     // 建立时间，proto则为修改时间
+    restTime
+    // 剩余空闲时间
 }
 
 class event {
@@ -39,6 +41,8 @@ class event {
     // 照片证明
     comments[] 
     //其它人的评论
+    lastTime
+    //事件所需时间
 }
 
 class comment {
@@ -57,19 +61,20 @@ login.html
 //登录页面，交互数据：name, password，使用AJAX提交用户名密码，以使用户名密码错误时页面不跳转而只是弹出错误警示框。
 
 editor.html
-//编辑页面，显示proto的日程内容，点击对应格弹出一个表单框输入修改内容。前端接收数据: user对象
+//编辑页面，显示proto的日程内容，点击对应格弹出一个表单框输入修改内容。提交前前端先判断事件的所需时间是否小于从点击格子开始的空白格子数。前端接收数据: user对象
 
 share.html
 //用户日程展示，分享用户的日程完成情况，该页只列出用户的列表。前端接收数据: user列表（只含name和slogan成员)，点击列表进入用户历史日程分享
 
 sharedetail.html
-//用户日程分享详细，点击不同周显示不同周的日程完成情况，显示与编辑页面相似，但点击小格显示的内容多出了完成情况、感想、照片和评论。前端接收数据，特定user对象
+//用户日程分享详细，点击不同周显示不同周的日程完成情况，显示与编辑页面相似，但点击小格显示的内容多出了完成情况、感想、照片和评论。
+//评论发送用ajax请求，收到'suceess'信息后更新评论列表。前端接收数据，特定user对象
 
 arranger.html
-//针对空闲时间不知道如何安排的用户所设，输入自己最近要完成的任务及dealine，让系统来安排日程，前端接收数据:无
+//针对空闲时间不知道如何安排的用户所设，输入自己最近要完成的任务及deadline，让系统来安排日程，前端接收数据:无
 
 confirm.html
-//显示系统生成的日程表，让用户判断是否采用。前端接收数据: schedule对象
+//显示系统生成的日程表，让用户判断是否采用，若取消则返回编辑页面。前端接收数据: schedule对象
 
 前端get请求:
 
@@ -94,7 +99,8 @@ confirm.html
 /confirm 
 //post数据为待确认的schedule对象
 /comment
-//post数据有comment评论内容和writer(vistor或用户名)
+//post数据有comment评论内容和writer(vistor或用户名)、被评论的用户name、日程编号num(哪一周的历史日程)及事件的坐标row, col
 /submit
 //为任务完成的打卡，post数据有感想feeling和照片photo及坐标row, col
+
 =============================

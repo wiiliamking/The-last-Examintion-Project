@@ -1,5 +1,3 @@
-var th = false;
-// 单元格转化成文本框 
 function changeTotext(obj) { 
     var tdValue = obj.innerText; 
     obj.innerText = ""; 
@@ -16,25 +14,21 @@ function changeTotext(obj) {
 function cancel(obj) { 
     var txtValue = document.getElementById("_text_").value; 
     obj.innerText = txtValue;
-    if (th == true) 
-        $.post("/edit", {data: txtValue, row: row, column: col}, function(){});                               //  post !!!!!!!!!!!!!!!!!!!!!!!!! 
-    else {
-        $.post("#", {value: txtValue}, function(){});
-    }
+    data = t_div.innerHTML;
+    $.post("/edit", {value: txtValue, row: row, col: col, data: data}, function(){}); 
+
 } 
 
 
 document.onclick = function() { 
     if (event.srcElement.tagName.toLowerCase() == "th") { 
-        th = true;
         row = event.srcElement.parentNode.rowIndex;
-        col = event.srcElement.cellIndex;
-        changeTotext(event.srcElement); 
-    } else if (event.srcElement.tagName.toLowerCase() == "h2"){
-        th = false;
+        var clas = event.srcElement.className;
+        if (clas == "classes") col = 0;
+        if (clas == "time") col = 1;
+        if (clas == "day") col = 3;
         changeTotext(event.srcElement);
-    }
-     
+  }   
 } 
 document.onmouseup = function() { 
     if (document.getElementById("_text_") && event.srcElement.id != "_text_") 
@@ -45,3 +39,38 @@ document.onmouseup = function() {
     } 
 } 
 
+ window.onload = function() {
+    function time(){
+        t_div = document.getElementById('showtime');
+        var now=new Date()
+        /*t_div.innerHTML = now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate();*/
+        if ((now.getMonth() + 1) < 10) {
+            t_div.innerHTML = "0" + (now.getMonth()+1) + "-";
+        } else {
+            t_div.innerHTML = (now.getMonth()+1) + "-";
+        }
+        if (now.getDate() < 10) {
+            t_div.innerHTML = t_div.innerHTML +"0" +  now.getDate();
+        } else {
+            t_div.innerHTML = t_div.innerHTML +  now.getDate();
+        }
+
+        setTimeout(time,1000);
+    }
+    time();
+    oks = document.getElementsByClassName("ok");
+    trs =document.getElementsByTagName("tr");
+    for (var i = 0; i < 9; i++) {
+        oks[i].addEventListener('click', function(event) {
+            for (var j = 1; j < 10; j++) {
+                trs[j].style.display = "none";
+            }
+            end = document.getElementById("end");
+            end.style.display = "block";
+            var srow = event.currentTarget.parentNode.parentNode.rowIndex;
+            $("#end form:first-child").attr("action", "/submit" + "/" + srow)
+        });
+    }
+
+
+ }
