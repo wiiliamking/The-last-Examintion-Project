@@ -1,0 +1,147 @@
+<!doctype html>
+<html class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>Time scheduler</title>
+
+  <!-- Set render engine for 360 browser -->
+  <meta name="renderer" content="webkit">
+
+  <!-- No Baidu Siteapp-->
+  <meta http-equiv="Cache-Control" content="no-siteapp"/>
+
+  <link rel="icon" type="image/png" href="{{ static_url("assets") }}/i/logo.png">
+
+  <!-- Add to homescreen for Chrome on Android -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <link rel="icon" sizes="192x192" href="{{ static_url("assets") }}/i/logo.png">
+
+  <!-- Add to homescreen for Safari on iOS -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Amaze UI"/>
+  <link rel="apple-touch-icon-precomposed" href="{{ static_url("assets") }}/i/app-icon72x72@2x.png">
+
+  <!-- Tile icon for Win8 (144x144 + tile color) -->
+  <meta name="msapplication-TileImage" content="{{ static_url("assets") }}/i/app-icon72x72@2x.png">
+  <meta name="msapplication-TileColor" content="#0e90d2">
+
+  <link rel="stylesheet" href="{{ static_url("assets") }}/css/amazeui.min.css">
+  <link rel="stylesheet" href="{{ static_url("stylesheets") }}/lookback.css">
+</head>
+<body>
+<!--在这里编写你的代码-->
+
+    <div class="main">
+        <div class="head">
+            <h2 class="word am-monospace">Time scheduler</h2>
+        </div>
+        <div class="nav">
+             <button id="change" type="button" class="am-btn am-btn-default"><a href="/">主页</a></button>
+             <button id="change" type="button" class="am-btn am-btn-default now"><a href="/share">回顾</a></button>
+             <button id="change" type="button" class="am-btn am-btn-default"><a href="/arranger">帮你安排</a></button>
+             <button id="change" type="button" class="am-btn am-btn-default"><a href="/logout">退出</a></button>
+        </div>
+        {% set num = 0 %}
+        <div class="head_word">
+          <p>看看这一周的都做了什么，收获了什么~</p>
+          <div>
+        <div class = "table">
+            {% set lastDay = schedule[len(schedule) - 1] %}
+            <table>
+                <p>{{ lastDay["year"] }}年{{ lastDay["month"] }}月{{ lastDay["day"] }}日</p>
+                <tr>
+                    <td class="day" ><img src = "{{ static_url("assets") }}/i/logo.png" alt = "logo" class = "logo"></td>
+                    <th class="day">{{ lastDay["slogan"] }}</th>
+                    <td class="day"  id="isCompleted">完成情况</td>
+                </tr>
+                {% for event in lastDay["content"] %}
+                <tr>
+                    <th class="classes">{{ event["startTime"] }}-{{ event["endTime"] }}</th>
+                    <th class="time">{{ event["summary"] }}</th>
+                    <td class = "finish_img"><img src="{{ static_url("assets") }}/i/xiang.png" id="detail-{{ num }}" class="ok"></td>
+                    {% set num = num + 1 %}
+                </tr>
+                {% end %}
+                <tr>
+                    <th class="classes">深夜</th>
+                    <th class="time">如果你一定要晚睡~~~= =</th>
+                    <td class = "finish_img"><img src="{{ static_url("assets") }}/i/xiang.png" class="ok"></td>
+                </tr>
+            </table>
+        </div>
+
+        
+    </div>
+    <div></div>
+    <div class="foot">
+        <button id="change" type="button" class="am-btn am-btn-default early">更早记录</a></button>
+    </div>
+
+    <div id="more" class="hidden">
+        {% if len(schedule) == 1 %}
+            <p>还没有历史的记录喔～</p>
+        {% end %}
+        {% for i in range(0, len(schedule) - 1)[::-1] %}
+        <div class = "table">
+            <p>{{ schedule[i]["year"] }}年{{ schedule[i]["month"] }}月{{ shcedule[i]["day"] }}日</p>
+            <table>
+                <tr>
+                    <td class="day" ><img src = "{{ static_url("assets") }}/i/logo.png" alt = "logo" class = "logo"></td>
+                    <th class="day">{{ schedule[i]["slogan"] }}</th>
+                    <td class="day"  id="isCompleted">完成情况</td>
+                </tr>
+                {% for event in schedule[i]["content"] %}
+                <tr>
+                    <th class="classes">{{ event["startTime"] }}-{{ event["endTime"] }}</th>
+                    <th class="time">{{ event["summary"] }}</th>
+                    <td class = "finish_img" ><img src="{{ static_url("assets") }}/i/xiang.png" class="ok" id="detail-{{ num }}"></td>
+                    {% set num = num + 1 %}
+                </tr>
+                {% end %}
+                <tr>
+                    <th class="classes">深夜</th>
+                    <th class="time">如果你一定要晚睡~~~= =</th>
+                    <td class = "finish_img"><img src="{{ static_url("assets") }}/i/xiang.png" class="ok"></td>
+                </tr>
+            </table>
+        </div>
+        {% end %}
+    </div>
+
+    <div id="detail">
+        {% for day in schedule %}
+            {% for event in day["content"] %}
+                <div class="event_detail hidden">
+                    <p>
+                        是否完成计划： {{ event["completed"] }}
+                    </p>
+                    <p>
+                        是否按时完成： {{ event["onTime"] }}
+                    </p>
+                    <p>
+                        满意程度： {{ event["content"] }}
+                    </p>
+                    <p>
+                        心得： {{ event["feeling"] }}
+                    </p>
+                    <button class="back">返回</button>
+                </div>
+            {% end %}
+        {% end %}
+    </div>
+
+<!--[if (gte IE 9)|!(IE)]><!-->
+<script src="{{ static_url("javascript") }}/jquery.min.js"></script>
+<script src="{{ static_url("javascript") }}/lookback.js"></script>
+<!--<![endif]-->
+<!--[if lte IE 8 ]>
+<script src="http://libs.baidu.com/jquery/1.11.1/jquery.min.js"></script>
+<![endif]-->
+</body>
+</html>

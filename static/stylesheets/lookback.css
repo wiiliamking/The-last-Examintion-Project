@@ -59,16 +59,18 @@ th, td{
     background-color: #FFD7A1;
 }
 .foot {
-    height:40rem;
+    height:10rem;
     margin-top: -3.8%;
     background-color: rgb(179, 179, 179);
 }
-.foot p {
+.head_word {
+    background-color: rgb(179, 179, 179);
+}
+.head_word p{
     text-align: center;
+    padding-top: 2rem;
     font-size: 1rem;
     color:#734718;
-    line-height: 2rem;
-    padding-top: 2rem;
 }
 .area {
     width: 28rem;
@@ -94,45 +96,37 @@ th, td{
 }
 
 
-form {
-    margin-bottom: 8%;
-}
 a {
     color: rgb(100,100,100);
 }
-#_text_ {
-    height: 120%;
-    width: 100%;
-    font-size: 1rem;
-}
+
 
 #end {
     display: none;
+    font-size: 1.3rem;
+    background-color: rgb(100,100,100);
+    width: 300px;
+    height: 300px;
+    height: 1.3rem;
+    margin:0;
+    padding: 0;
 }
-label {
-    font-weight: lighter;
-    font-size: 1rem;
-    font-family: "Segoe UI","Lucida Grande",Helvetica,Arial,"Microsoft YaHei",
-}
-.from {
-    border-bottom: 1px solid rgb(222,222,222);
-    border-collapse:collapse;
-    width: 260px;
-    margin: 0 auto;
-}
-.submit {
-    margin-top: 4%;
-    background-color: #FFA43F;
-    width: 200px;
-    height: 12%;
-    border: solid 2px #FFA43F;
-    font-size: 1.6rem;
-    color: rgb(253,253,253);
-    letter-spacing: 1rem;
-    text-align: center;
-    font-family: "Microsoft YaHei",tahoma,arial,"Segoe UI","Lucida Grande",Helvetica,Arial,"Microsoft YaHei",FreeSans,Arimo,"Droid Sans","wenquanyi micro hei","Hiragino Sans GB","Hiragino Sans GB W3";
+.early {
+    margin-top: 1rem;
 }
 
 .now {
     background-color: rgb(200,200,200);
+}
+
+.hidden {
+    display: none;
+}
+
+.event_detail {
+    position: absolute;
+    z-index: 3;
+    top: 40%;
+    left:45%;
+    background-color: white;
 }

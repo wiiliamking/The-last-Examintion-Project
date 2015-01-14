@@ -1,223 +1,125 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html class="no-js">
 <head>
-    <title>index</title>
-    <meta charset='utf-8'>
-    <link rel="stylesheet" type="text/css" href="{{ static_url("stylesheets") }}/index.css">
-    <script type="text/javascript" src="{{ static_url("javascript") }}/jquery.js"></script>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>Time scheduler</title>
+
+  <!-- Set render engine for 360 browser -->
+  <meta name="renderer" content="webkit">
+
+  <!-- No Baidu Siteapp-->
+  <meta http-equiv="Cache-Control" content="no-siteapp"/>
+
+  <link rel="icon" type="image/png" href="{{ static_url("assets") }}/i/logo.png">
+
+  <!-- Add to homescreen for Chrome on Android -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <link rel="icon" sizes="192x192" href="{{ static_url("assets") }}/i/logo.png">
+
+  <!-- Add to homescreen for Safari on iOS -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Amaze UI"/>
+  <link rel="apple-touch-icon-precomposed" href="{{ static_url("assets") }}/i/app-icon72x72@2x.png">
+
+  <!-- Tile icon for Win8 (144x144 + tile color) -->
+  <meta name="msapplication-TileImage" content="{{ static_url("assets") }}/i/app-icon72x72@2x.png">
+  <meta name="msapplication-TileColor" content="#0e90d2">
+
+  <link rel="stylesheet" href="{{ static_url("assets") }}/css/amazeui.min.css">
+  <link rel="stylesheet" href="{{ static_url("stylesheets") }}/index.css">
 </head>
 <body>
+<!--在这里编写你的代码-->
+
     <div class="main">
         <div class="head">
-            <div class = "word">
-                <h2>好好学习天天向上</h2></div>
-            <div class="reg_log">
-<!--                 <div class="reg">
-                    <a href="#">注册</a>
-                </div> -->
-                <div class="log">
-                    <a href="/logout">登出</a>
-                </div>
-            </div>
+            <h2 class="word am-monospace">Time scheduler</h2>
+        </div>
+        <div class="nav">
+             <button id="change" type="button" class="am-btn am-btn-default now"><a href="/">主页</a></button>
+             <button id="change" type="button" class="am-btn am-btn-default"><a href="/share">回顾</a></button>
+             <button id="change" type="button" class="am-btn am-btn-default"><a href="/arranger">帮你安排</a></button>
+             <button id="change" type="button" class="am-btn am-btn-default"><a href="/logout">退出</a></button>
         </div>
         <div class = "table">
             <table>
                 <tr>
-                    <th class="day"></th>
-                    <th class="day">星期一</th>
-                    <th class="day">星期二</th>
-                    <th class="day">星期三</th>
-                    <th class="day">星期四</th>
-                    <th class="day">星期五</th>
-                    <th class="day">星期六</th>
-                    <th class="day">星期日</th>
+                    <td class="day" ><img src = "{{ static_url("assets") }}/i/logo.png" alt = "logo" class = "logo"></td>
+                    <th class="day">{{ slogan }}</th>
+                    <td class="day"  id="showtime"></td>
                 </tr>
+                {% for event in schedule %}
+                    <tr>
+                        <th class="classes">{{ event["startTime"] }}-{{ event["endTime"] }}</th>
+                        <th class="time">{{ event["summary"] }}</th>
+                        <td class = "finish_img"><img src="{{ static_url("assets") }}/i/ok.png" class="ok"></td>
+                    </tr>
+                {% end %}
                 <tr>
-                    <th class="classes">第一节</th>
-<!--                     <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th> -->
-                    {% for i in range(0, 7) %}
-                        <th>{{ schedule[i] }}</th>
-                    {% end %}
-                </tr>
-                <tr>
-                    <th class="classes">第二节</th>
-<!--                     <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th> -->
-                    {% for i in range(0, 7) %}
-                        <th>{{ schedule[7 + i] }}</th>
-                    {% end %}
-                </tr>
-                <tr>
-                    <th class="classes">第三节</th>
-<!--                     <th></th>
-                    <th>概率与统计<br> 
-                        C205</th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th> -->
-                    {% for i in range(0, 7) %}
-                        <th>{{ schedule[14 + i] }}</th>
-                    {% end %}
-                </tr>
-                <tr>
-                    <th class="classes">第四节</th>
-<!--                     <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th> -->
-                    {% for i in range(0, 7) %}
-                        <th>{{ schedule[21 + i] }}</th>
-                    {% end %}
-                </tr>
-                <tr>
-                    <th class="classes">第五节</th>
-<!--                     <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th> -->
-                    {% for i in range(0, 7) %}
-                        <th>{{ schedule[28 + i] }}</th>
-                    {% end %}
-                </tr>
-                <tr>
-                    <th class="classes">第六节</th>
-<!--                     <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th> -->
-                    {% for i in range(0, 7) %}
-                        <th>{{ schedule[35 + i] }}</th>
-                    {% end %}
-                </tr>
-                <tr>
-                    <th class="classes">第七节</th>
-<!--                     <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th> -->
-                    {% for i in range(0, 7) %}
-                        <th>{{ schedule[42 + i] }}</th>
-                    {% end %}
-                </tr>
-                <tr>
-                    <th class="classes">第八节</th>
-<!--                     <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th> -->
-                    {% for i in range(0, 7) %}
-                        <th>{{ schedule[49 + i] }}</th>
-                    {% end %}
-                </tr>
-                <tr>
-                    <th class="classes">第九节</th>
-<!--                     <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th> -->
-                    {% for i in range(0, 7) %}
-                        <th>{{ schedule[56 + i] }}</th>
-                    {% end %}
-                </tr>
-                <tr>
-                    <th class="classes">第十节</th>
-<!--                     <th></th>
-                    <th></th>
-                    <th></th>
-                    <th>web2.0 B403</th>
-                    <th></th>
-                    <th></th> -->
-                    {% for i in range(0, 7) %}
-                        <th>{{ schedule[63 + i] }}</th>
-                    {% end %}
-                </tr>
-                <tr>
-                    <th class="classes">第十一节</th>
-<!--                     <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th> -->
-                    {% for i in range(0, 7) %}
-                        <th>{{ schedule[70 + i] }}</th>
-                    {% end %}
-                </tr>
-                <tr>
-                    <th class="classes">第十二节</th>
-<!--                     <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th> -->
-                    {% for i in range(0, 7) %}
-                        <th>{{ schedule[77 + i] }}</th>
-                    {% end %}
-                </tr>
-                <tr>
-                    <th class="classes">第十三节</th>
-<!--                     <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th>数字电路与模拟设计实验 B104</th> -->
-                    {% for i in range(0, 7) %}
-                        <th>{{ schedule[84 + i] }}</th>
-                    {% end %}
-                </tr>
-                <tr>
-                    <th class="classes">第十四节</th>
-<!--                     <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th> -->
-                    {% for i in range(0, 7) %}
-                        <th>{{ schedule[91 + i] }}</th>
-                    {% end %}
-                </tr>
-                <tr>
-                    <th class="classes">第十五节</th>
-<!--                     <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th> -->
-                    {% for i in range(0, 7) %}
-                        <th>{{ schedule[98 + i] }}</th>
-                    {% end %}
+                    <th class="classes">深夜</th>
+                    <th class="time">如果你一定要晚睡~~~= =</th>
+                    <td class = "finish_img"><img src="{{ static_url("assets") }}/i/moon.png" class="ok"></td>
                 </tr>
             </table>
         </div>
+        <div id="end">
+                  <form method = "post" action = "">
+                    <div class = "from">
+                    完成该计划
+                    <label>
+                      <input type="radio" name="completed" value="是">
+                      是</label>
+                      <label>
+                      <input type="radio" name="completed" value="否">
+                      否
+                  </label></div>
+                  <div class = "from">满意程度
+                   <label>
+                    <input type="radio" name="content" value="满意" checked >
+                    满意</label>
+                    <label>
+                    <input type="radio" name="content" value="一般">
+                    一般</label>
+                    <label>
+                    <input type="radio" name="content" value="不满意">
+                   不满意
+                  </label></div>
+                  <div class = "from">按时完成
+                  <label>
+                      <input type="radio" name="onTime" value="是" checked>
+                      是</label>
+                      <label>
+                      <input type="radio" name="onTime" value="否">
+                      否
+                  </label></div>
+                  
+                  <input type = "text" placeholder="  说说心得" name = "feeling"><br>
+<!--                   <input placeholder="  备注？" name = "finish5"><br> -->
+                  <input type ="submit" class="submit" value = "提交">
+
+
+
+
+                  </form>
+        </div>
+        
     </div>
     <div class="foot">
+      <p>点击想要编辑的区域即可编辑哦~点击右侧图标可结束事件~加油哒</p>
     </div>
-    <script type="text/javascript" src="{{ static_url("javascript") }}/index.js"></script>
+
+<!--[if (gte IE 9)|!(IE)]><!-->
+<script src="{{ static_url("javascript") }}/jquery.min.js"></script>
+<script src="{{ static_url("javascript") }}/index.js"></script>
+<!--<![endif]-->
+<!--[if lte IE 8 ]>
+<script src="http://libs.baidu.com/jquery/1.11.1/jquery.min.js"></script>
+<![endif]-->
 </body>
 </html>
