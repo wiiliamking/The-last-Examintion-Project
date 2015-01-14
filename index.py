@@ -15,7 +15,8 @@ define("port", default=8000, help="run on the given port", type=int)
 
 from pymongo import Connection
 con = Connection()
-db = con.test
+db = con.william
+db.authenticate('admin', 'IuxaGc9i6ygL')
 users = db.user
 
 class BaseHandler(tornado.web.RequestHandler):

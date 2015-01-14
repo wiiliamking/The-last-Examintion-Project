@@ -54,6 +54,7 @@ th, td{
 }
 .time {
     width: 30rem;
+    font-size: 1.2rem;
 }
 .day {
     background-color: #FFD7A1;
@@ -128,5 +129,19 @@ a {
     z-index: 3;
     top: 40%;
     left:45%;
-    background-color: white;
+    background-color: rgb(255, 221, 103);
+    padding: 1rem;
+}
+.event_detail p {
+     line-height: 1rem;
+     font-size: 1.2rem;
+     padding-top:0rem;
+}
+.back {
+    border:none;
+    font-size: 1.5rem;
+}
+.back:hover {
+    background-color: rgb(100,100,100);
+    color: rgb(233,233,233);
 }

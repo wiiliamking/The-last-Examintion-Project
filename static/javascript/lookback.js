@@ -14,7 +14,7 @@
     // })
     console.log(document.getElementById("change"));
     document.onclick=function() {
-        if (event.srcElement.id == "change") {
+        if (event.srcElement.id == "hid") {
             $("#more").removeClass("hidden");
             event.srcElement.className = event.srcElement.className + " hidden";
         }
