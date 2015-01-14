@@ -13,11 +13,13 @@ import os
 from tornado.options import define, options
 define("port", default=8000, help="run on the given port", type=int)
 
-from pymongo import Connection
-con = Connection()
-db = con.william
-db.authenticate('admin', 'IuxaGc9i6ygL')
-users = db.user
+MONGODB_DB_URL = os.environ.get('OPENSHIFT_MONGODB_DB_URL') if os.environ.get('OPENSHIFT_MONGODB_DB_URL') else 'mongodb://localhost:27017/'
+MONGODB_DB_NAME = os.environ.get('OPENSHIFT_APP_NAME') if os.environ.get('OPENSHIFT_APP_NAME') else 'schedulers'
+
+from pymongo import MongoClient
+con = MongoClient(MONGODB_DB_URL)
+db = con[MONGODB_DB_NAME]
+users = db.users
 
 class BaseHandler(tornado.web.RequestHandler):
     def get_current_user(self):
